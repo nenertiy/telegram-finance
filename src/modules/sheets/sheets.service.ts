@@ -120,37 +120,37 @@ export class SheetsService {
               },
             },
             {
-              userEnteredValue: { formulaValue: ' ' },
+              userEnteredValue: { formulaValue: '' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
-              userEnteredValue: { formulaValue: ' ' },
+              userEnteredValue: { formulaValue: '' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
-              userEnteredValue: { stringValue: '' },
+              userEnteredValue: { formulaValue: '' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
-              userEnteredValue: { stringValue: '' },
+              userEnteredValue: { formulaValue: '' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
-              userEnteredValue: { stringValue: '' },
+              userEnteredValue: { formulaValue: '' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
-              userEnteredValue: { formulaValue: ' ' },
+              userEnteredValue: { formulaValue: '' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
