@@ -4,6 +4,7 @@ import { BotUpdate } from './bot.update';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AccessMiddleware } from 'src/common/middlewares/access.middleware';
+import { SheetsModule } from '../sheets/sheets.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AccessMiddleware } from 'src/common/middlewares/access.middleware';
         middlewares: [AccessMiddleware(configService)],
       }),
     }),
+    SheetsModule,
   ],
   providers: [BotService, BotUpdate],
 })
