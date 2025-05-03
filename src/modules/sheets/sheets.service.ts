@@ -28,7 +28,6 @@ export class SheetsService {
       sheetData.data.values &&
       sheetData.data.values.length > 0;
     if (!valuesExist) {
-      // Создаем заголовки и категории как на изображении
       const spendCategories = [
         { name: 'no category', color: '#cccccc' },
         { name: 'food', color: '#8e7cc3' },
@@ -52,56 +51,56 @@ export class SheetsService {
         {
           userEnteredValue: { stringValue: 'Spends' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
         {
           userEnteredValue: { stringValue: '$' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
         {
           userEnteredValue: { stringValue: '€' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
         {
           userEnteredValue: { stringValue: '₽' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
         {
           userEnteredValue: { stringValue: '$' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
         {
           userEnteredValue: { stringValue: '€' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
         {
           userEnteredValue: { stringValue: '₽' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
         {
           userEnteredValue: { stringValue: 'Income' },
           userEnteredFormat: {
-            textFormat: { bold: true, fontSize: 14 },
+            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
             horizontalAlignment: 'CENTER',
           },
         },
@@ -117,43 +116,43 @@ export class SheetsService {
               userEnteredValue: { stringValue: category.name },
               userEnteredFormat: {
                 backgroundColor: this.hexToRgb(category.color),
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
               userEnteredValue: { formulaValue: '#NAME?' },
               userEnteredFormat: {
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
               userEnteredValue: { formulaValue: '#NAME?' },
               userEnteredFormat: {
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
               userEnteredValue: { stringValue: '' },
               userEnteredFormat: {
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
               userEnteredValue: { stringValue: '' },
               userEnteredFormat: {
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
               userEnteredValue: { stringValue: '' },
               userEnteredFormat: {
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
               userEnteredValue: { formulaValue: '#NAME?' },
               userEnteredFormat: {
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             i < incomeCategories.length
@@ -161,7 +160,7 @@ export class SheetsService {
                   userEnteredValue: { stringValue: incomeCategories[i].name },
                   userEnteredFormat: {
                     backgroundColor: this.hexToRgb(incomeCategories[i].color),
-                    textFormat: { fontSize: 12 },
+                    textFormat: { fontSize: 12, fontFamily: 'Verdana' },
                   },
                 }
               : { userEnteredValue: { stringValue: '' } },
@@ -174,56 +173,56 @@ export class SheetsService {
           {
             userEnteredValue: { stringValue: 'Date' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
           {
             userEnteredValue: { stringValue: '$' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
           {
             userEnteredValue: { stringValue: '$' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
           {
             userEnteredValue: { stringValue: '€' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
           {
             userEnteredValue: { stringValue: '€' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
           {
             userEnteredValue: { stringValue: '₽' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
           {
             userEnteredValue: { stringValue: '₽' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
           {
             userEnteredValue: { stringValue: 'Description' },
             userEnteredFormat: {
-              textFormat: { bold: true, fontSize: 14 },
+              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
               horizontalAlignment: 'CENTER',
             },
           },
@@ -237,50 +236,50 @@ export class SheetsService {
               stringValue: dayjs().format('DD.MM.YYYY/HH:mm'),
             },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
           {
             userEnteredValue: { numberValue: usdAmount },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
 
           {
             userEnteredValue: { numberValue: 0 },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
           {
             userEnteredValue: { numberValue: eurAmount },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
           {
             userEnteredValue: { numberValue: 0 },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
           {
             userEnteredValue: { numberValue: rubAmount },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
           {
             userEnteredValue: { numberValue: 0 },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
           {
             userEnteredValue: { stringValue: 'init' },
             userEnteredFormat: {
-              textFormat: { fontSize: 12 },
+              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
             },
           },
         ],
@@ -377,7 +376,7 @@ export class SheetsService {
           stringValue: dayjs().format('DD.MM.YYYY/HH:mm'),
         },
         userEnteredFormat: {
-          textFormat: { fontSize: 12 },
+          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
         },
       },
       // Формула для суммирования USD
@@ -386,7 +385,7 @@ export class SheetsService {
           formulaValue: `=B${prevRow}+C${thisRow}`,
         },
         userEnteredFormat: {
-          textFormat: { fontSize: 12 },
+          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
         },
       },
       {
@@ -398,9 +397,9 @@ export class SheetsService {
                   green: this.hexToRgb(color).green,
                   blue: this.hexToRgb(color).blue,
                 },
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               }
-            : { textFormat: { fontSize: 12 } },
+            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
         userEnteredValue: {
           numberValue: transactionData.currency === 'usd' ? amount : 0,
         },
@@ -410,7 +409,7 @@ export class SheetsService {
           formulaValue: `=D${prevRow}+E${thisRow}`,
         },
         userEnteredFormat: {
-          textFormat: { fontSize: 12 },
+          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
         },
       },
       {
@@ -422,9 +421,9 @@ export class SheetsService {
                   green: this.hexToRgb(color).green,
                   blue: this.hexToRgb(color).blue,
                 },
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               }
-            : { textFormat: { fontSize: 12 } },
+            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
         userEnteredValue: {
           numberValue: transactionData.currency === 'eur' ? amount : 0,
         },
@@ -434,7 +433,7 @@ export class SheetsService {
           formulaValue: `=F${prevRow}+G${thisRow}`,
         },
         userEnteredFormat: {
-          textFormat: { fontSize: 12 },
+          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
         },
       },
       {
@@ -446,9 +445,9 @@ export class SheetsService {
                   green: this.hexToRgb(color).green,
                   blue: this.hexToRgb(color).blue,
                 },
-                textFormat: { fontSize: 12 },
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               }
-            : { textFormat: { fontSize: 12 } },
+            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
         userEnteredValue: {
           numberValue: transactionData.currency === 'rub' ? amount : 0,
         },
@@ -458,7 +457,7 @@ export class SheetsService {
           stringValue: description,
         },
         userEnteredFormat: {
-          textFormat: { fontSize: 12 },
+          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
         },
       },
     ];
