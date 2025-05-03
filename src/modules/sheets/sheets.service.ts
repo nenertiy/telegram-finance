@@ -120,19 +120,13 @@ export class SheetsService {
               },
             },
             {
-              userEnteredValue: { formulaValue: '#NAME?' },
+              userEnteredValue: { formulaValue: ' ' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
             },
             {
-              userEnteredValue: { formulaValue: '#NAME?' },
-              userEnteredFormat: {
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-              },
-            },
-            {
-              userEnteredValue: { stringValue: '' },
+              userEnteredValue: { formulaValue: ' ' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
@@ -150,7 +144,13 @@ export class SheetsService {
               },
             },
             {
-              userEnteredValue: { formulaValue: '#NAME?' },
+              userEnteredValue: { stringValue: '' },
+              userEnteredFormat: {
+                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+              },
+            },
+            {
+              userEnteredValue: { formulaValue: ' ' },
               userEnteredFormat: {
                 textFormat: { fontSize: 12, fontFamily: 'Verdana' },
               },
