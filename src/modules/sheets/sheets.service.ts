@@ -23,6 +23,7 @@ export class SheetsService {
   async initFinance(usdAmount = 0, eurAmount = 0, rubAmount = 0) {
     const { lastSheet, sheetName } = await this.getSheet();
     const sheetData = await this.getSheetData(sheetName);
+    const date = dayjs().format('MMMM YYYY');
     const valuesExist =
       sheetData.data &&
       sheetData.data.values &&
@@ -330,12 +331,32 @@ export class SheetsService {
         ],
       };
 
+      let sheetIdToUse = lastSheet;
+
+      if (sheetName !== date) {
+        await this.batchUpdateSheetData({
+          requests: [
+            {
+              addSheet: {
+                properties: {
+                  title: date,
+                },
+              },
+            },
+          ],
+        });
+
+        const { lastSheet: newLastSheet } = await this.getSheet();
+
+        sheetIdToUse = newLastSheet;
+      }
+
       const requestBody = {
         requests: [
           {
             appendCells: {
               fields: 'userEnteredValue, userEnteredFormat',
-              sheetId: lastSheet,
+              sheetId: sheetIdToUse,
               rows: [
                 { values: headerCells },
                 ...categoryRows,
@@ -359,7 +380,18 @@ export class SheetsService {
     amount: number;
     description?: string;
   }) {
-    const { lastSheet, sheetName } = await this.getSheet();
+    const { sheetName: oldSheeName } = await this.getSheet();
+    const oldSheetData = await this.getSheetData(oldSheeName);
+
+    const dollarValue =
+      oldSheetData.data.values[oldSheetData.data.values.length - 1][1];
+    const eurValue =
+      oldSheetData.data.values[oldSheetData.data.values.length - 1][3];
+    const rubValue =
+      oldSheetData.data.values[oldSheetData.data.values.length - 1][5];
+
+    await this.checkDateList(dollarValue, eurValue, rubValue);
+    const { sheetName, lastSheet } = await this.getSheet();
     const sheetData = await this.getSheetData(sheetName);
 
     const valuesExist =
@@ -596,5 +628,40 @@ export class SheetsService {
     };
 
     return this.batchUpdateSheetData(requestBody);
+  }
+
+  private async checkDateList(dollarValue, eurValue, rubValue) {
+    const { sheetName } = await this.getSheet();
+    const date = dayjs().format('MMMM YYYY');
+
+    if (sheetName !== date) {
+      try {
+        const requestBody = {
+          requests: [
+            {
+              addSheet: {
+                properties: {
+                  title: date,
+                },
+              },
+            },
+          ],
+        };
+
+        const response = await this.batchUpdateSheetData(requestBody);
+
+        console.log('Новый лист создан:', date);
+
+        await this.initFinance(dollarValue, eurValue, rubValue);
+
+        return response.data.replies[0].addSheet?.properties;
+      } catch (error) {
+        console.error('Ошибка при создании листа:', error.message);
+        throw error;
+      }
+    } else {
+      console.log('Текущий лист уже актуален:', sheetName);
+      return null;
+    }
   }
 }
