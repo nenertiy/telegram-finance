@@ -1,99 +1,182 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 💸 Telegram Finance Bot
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> **Personal finance tracking made simple — directly in Telegram.**
+> Track your expenses and income in multiple currencies, categorize transactions, and get real-time Google Sheets integration.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📌 Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Telegram Finance Bot is a personal finance management tool that helps you track your **expenses** and **income** via Telegram. It integrates with **Google Sheets** to securely store and analyze your financial data, providing an intuitive and automated budgeting experience.
 
-## Project setup
+---
 
-```bash
-$ npm install
-```
+## 🚀 Features
 
-## Compile and run the project
+* 💱 Multi-currency support: `USD`, `EUR`, `RUB`
+* 🗂️ Categorize transactions: food, salary, travel, etc.
+* 📊 Google Sheets integration with predefined structure
+* 📝 Add transactions with optional descriptions
+* 🔄 Auto-calculated balances
+* 🔐 Access control for allowed users
+* 🌐 Google Sheets auto-tab creation by month (optional)
+* 📅 Auto-sorted records and AI-based monthly insights *(planned)*
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## 🛠️ Tech Stack
 
-# production mode
-$ npm run start:prod
-```
+* **NestJS** – server-side app framework
+* **Telegraf** – Telegram Bot Framework
+* **Google Sheets API** – for data persistence
+* **TypeScript** – typed development
 
-## Run tests
+---
+
+## 📦 Installation
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone https://github.com/nenertiy/telegram-finance
+cd telegram-finance
+npm install
+cp .env.example .env
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Edit `.env` with your credentials (see below), then:
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm run build
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## ⚙️ Environment Variables
 
-Check out a few resources that may come in handy when working with NestJS:
+| Variable              | Description                                                    |
+| --------------------- | -------------------------------------------------------------- |
+| `PORT`                | Server port (default: `3000`)                                  |
+| `TELEGRAM_BOT_TOKEN`  | Telegram bot token (from [@BotFather](https://t.me/BotFather)) |
+| `ALLOWED_CHAT_ID`     | Allowed Telegram chat ID                                       |
+| `GOOGLE_CLIENT_EMAIL` | Google Service Account email                                   |
+| `GOOGLE_PRIVATE_KEY`  | Google Service Account private key                             |
+| `GOOGLE_SHEET_ID`     | Target Google Sheet ID                                         |
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## 📗 Google Sheets Setup
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project
+3. Enable **Google Sheets API**
+4. Create a **Service Account**
+5. Download the credentials JSON
+6. Share the Google Sheet with your service account email
+7. Add the credentials to your `.env`
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🤖 Bot Commands
 
-## License
+| Command  | Description                                             |
+| -------- | ------------------------------------------------------- |
+| `/start` | Welcome message and usage instructions                  |
+| `/init`  | Initialize Google Sheet structure with categories       |
+| `/add`   | Add new transaction (currency, category, amount, notes) |
+| `/clear` | Clear the current input session                         |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## 🧑‍💻 Usage
+
+1. Start a chat with your bot in Telegram
+2. Use `/init` once to set up the spreadsheet
+3. Use `/add` to add transactions:
+
+   * Select currency: `USD`, `EUR`, `RUB`
+   * Choose category
+   * Enter amount and optional comment
+
+---
+
+## 🌍 Локализация: Telegram Finance Bot на русском
+
+### 📋 Обзор
+
+Telegram Finance Bot — это бот для Telegram, позволяющий легко отслеживать личные финансы: расходы, доходы, категории и балансы. Все данные сохраняются в Google Таблицах для удобной аналитики.
+
+---
+
+### 🔧 Функции
+
+* Поддержка валют: `USD`, `EUR`, `RUB`
+* Категории транзакций: еда, транспорт, зарплата и др.
+* Интеграция с Google Таблицами
+* Добавление описаний к тратам
+* Расчет баланса в реальном времени
+* Ограничение доступа по Telegram ID
+
+---
+
+### 📦 Установка
+
+```bash
+git clone https://github.com/nenertiy/telegram-finance
+cd telegram-finance
+npm install
+cp .env.example .env
+```
+
+Отредактируйте `.env` и затем:
+
+```bash
+npm run build
+npm run start:prod
+```
+
+---
+
+### 📄 Переменные окружения
+
+| Переменная            | Описание                                   |
+| --------------------- | ------------------------------------------ |
+| `PORT`                | Порт сервера (по умолчанию `3000`)         |
+| `TELEGRAM_BOT_TOKEN`  | Токен бота Telegram ([@BotFather](https://t.me/BotFather))                        |
+| `ALLOWED_CHAT_ID`     | ID Telegram-чата, которому разрешён доступ |
+| `GOOGLE_CLIENT_EMAIL` | Email сервисного аккаунта Google           |
+| `GOOGLE_PRIVATE_KEY`  | Приватный ключ аккаунта                    |
+| `GOOGLE_SHEET_ID`     | ID Google Таблицы                          |
+
+---
+
+### 🧾 Настройка Google Таблицы
+
+1. Создайте проект в Google Cloud Console
+2. Включите **Google Sheets API**
+3. Создайте сервисный аккаунт
+4. Скачайте JSON-файл с ключами
+5. Поделитесь доступом к таблице с email сервисного аккаунта
+6. Добавьте email и ключ в `.env`
+
+---
+
+### 🤖 Команды бота
+
+| Команда  | Описание                     |
+| -------- | ---------------------------- |
+| `/start` | Приветствие и инструкции     |
+| `/init`  | Инициализация Google Таблицы |
+| `/add`   | Добавление новой транзакции  |
+| `/clear` | Очистка текущей сессии       |
+
+---
+
+## 🧑‍💻 Использование
+
+1. Начните чат с вашим ботом в Telegram
+2. Один раз используйте команду `/init`, чтобы настроить таблицу
+3. Используйте команду `/add`, чтобы добавить транзакции:
+
+   * Выберите валюту: `USD`, `EUR`, `RUB`
+   * Выберите категорию
+   * Введите сумму и при необходимости комментарий
