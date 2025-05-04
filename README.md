@@ -66,13 +66,41 @@ npm run start:prod
 
 ## 📗 Google Sheets Setup
 
+To enable Google Sheets integration, follow these steps:
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project
-3. Enable **Google Sheets API**
+3. Enable the **Google Sheets API** for your project
 4. Create a **Service Account**
-5. Download the credentials JSON
-6. Share the Google Sheet with your service account email
-7. Add the credentials to your `.env`
+5. Download the JSON file with your credentials
+6. Share your Google Sheet with the **Service Account email** (with edit access)
+7. Add the required credentials from the JSON file to your `.env` file
+8. (Optional) If you want to sum cells by color, set up an Apps Script in your sheet:
+
+   * Open the spreadsheet
+   * Go to **Extensions → Apps Script**
+   * Paste the following function:
+
+   ```javascript
+   function sumColoredCells(sumRange, colorRef) {
+     var activeRg = SpreadsheetApp.getActiveRange();
+     var activeSht = SpreadsheetApp.getActiveSheet();
+     var activeformula = activeRg.getFormula();
+     var countRangeAddress = activeformula.match(/\((.*)\,/).pop().trim();
+     var backGrounds = activeSht.getRange(countRangeAddress).getBackgrounds();
+     var sumValues = activeSht.getRange(countRangeAddress).getValues();  
+     var colorRefAddress = activeformula.match(/\,(.*)\)/).pop().trim();
+     var BackGround = activeSht.getRange(colorRefAddress).getBackground();
+     var totalValue = 0;
+     for (var i = 0; i < backGrounds.length; i++)
+       for (var k = 0; k < backGrounds[i].length; k++)
+         if (backGrounds[i][k] == BackGround)
+           if (typeof sumValues[i][k] === 'number')
+             totalValue += sumValues[i][k];
+     return totalValue;
+   };
+   ```
+    
 
 ---
 
@@ -149,14 +177,43 @@ npm run start:prod
 
 ---
 
-### 🧾 Настройка Google Таблицы
+## 📗 Настройка Google Таблиц
 
-1. Создайте проект в Google Cloud Console
-2. Включите **Google Sheets API**
-3. Создайте сервисный аккаунт
-4. Скачайте JSON-файл с ключами
-5. Поделитесь доступом к таблице с email сервисного аккаунта
-6. Добавьте email и ключ в `.env`
+Чтобы подключить интеграцию с Google Таблицами, выполните следующие шаги:
+
+1. Перейдите в [Google Cloud Console](https://console.cloud.google.com/)
+2. Создайте новый проект
+3. Включите **Google Sheets API** для проекта
+4. Создайте **Сервисный аккаунт (Service Account)**
+5. Скачайте JSON-файл с учетными данными
+6. Предоставьте доступ к вашей Google Таблице, указав email сервисного аккаунта (доступ "Редактор")
+7. Добавьте необходимые данные из JSON-файла в `.env`
+8. *(Опционально)* Если вы хотите суммировать ячейки по цвету, настройте Apps Script:
+
+   * Откройте Google Таблицу
+   * Перейдите в **Расширения → Apps Script**
+   * Вставьте следующий код функции:
+
+   ```javascript
+   function sumColoredCells(sumRange, colorRef) {
+     var activeRg = SpreadsheetApp.getActiveRange();
+     var activeSht = SpreadsheetApp.getActiveSheet();
+     var activeformula = activeRg.getFormula();
+     var countRangeAddress = activeformula.match(/\((.*)\,/).pop().trim();
+     var backGrounds = activeSht.getRange(countRangeAddress).getBackgrounds();
+     var sumValues = activeSht.getRange(countRangeAddress).getValues();  
+     var colorRefAddress = activeformula.match(/\,(.*)\)/).pop().trim();
+     var BackGround = activeSht.getRange(colorRefAddress).getBackground();
+     var totalValue = 0;
+     for (var i = 0; i < backGrounds.length; i++)
+       for (var k = 0; k < backGrounds[i].length; k++)
+         if (backGrounds[i][k] == BackGround)
+           if (typeof sumValues[i][k] === 'number')
+             totalValue += sumValues[i][k];
+     return totalValue;
+   };
+   ```
+
 
 ---
 
