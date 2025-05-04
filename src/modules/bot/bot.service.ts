@@ -126,7 +126,7 @@ export class BotService {
         await this.sheetsService.initFinance(usdAmount, eurAmount, rubAmount);
         this.userSessions.delete(userId);
         await ctx.reply(
-          'Инициализация таблицы успешно завершена. Создана структура с категориями расходов и доходов и начальными суммами.',
+          'Инициализация таблицы успешно завершена. Создана структура с категориями расходов и доходов и начальными суммами. Теперь вы можете добавлять новые транзакции /add.',
         );
       } catch (error) {
         console.error('Ошибка при инициализации таблицы:', error);

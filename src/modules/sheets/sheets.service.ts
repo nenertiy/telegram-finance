@@ -42,9 +42,9 @@ export class SheetsService {
 
       const incomeCategories = [
         { name: 'salary', color: '#b6d7a8' },
-        { name: 'returns', color: '#b6d7a8' },
-        { name: 'gifts', color: '#b6d7a8' },
-        { name: 'savings', color: '#b6d7a8' },
+        { name: 'returns', color: '#93c47d' },
+        { name: 'gifts', color: '#6aa84f' },
+        { name: 'savings', color: '#38761d' },
       ];
 
       const headerCells = [
@@ -116,43 +116,88 @@ export class SheetsService {
               userEnteredValue: { stringValue: category.name },
               userEnteredFormat: {
                 backgroundColor: this.hexToRgb(category.color),
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+                textFormat: {
+                  fontSize: 12,
+                  fontFamily: 'Verdana',
+                },
               },
             },
             {
-              userEnteredValue: { formulaValue: '' },
+              userEnteredValue: {
+                formulaValue: `=sumColoredCells(C12:C, A${2 + i})`,
+              },
               userEnteredFormat: {
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+                backgroundColor: this.hexToRgb('#ea9999'),
+                textFormat: {
+                  fontSize: 12,
+                  fontFamily: 'Verdana',
+                  foregroundColor: this.hexToRgb('#991402'),
+                },
               },
             },
             {
-              userEnteredValue: { formulaValue: '' },
+              userEnteredValue: {
+                formulaValue: `=sumColoredCells(E12:E, A${2 + i})`,
+              },
               userEnteredFormat: {
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+                backgroundColor: this.hexToRgb('#ea9999'),
+                textFormat: {
+                  fontSize: 12,
+                  fontFamily: 'Verdana',
+                  foregroundColor: this.hexToRgb('#991402'),
+                },
               },
             },
             {
-              userEnteredValue: { formulaValue: '' },
+              userEnteredValue: {
+                formulaValue: `=sumColoredCells(G12:G, A${2 + i})`,
+              },
               userEnteredFormat: {
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+                backgroundColor: this.hexToRgb('#ea9999'),
+                textFormat: {
+                  fontSize: 12,
+                  fontFamily: 'Verdana',
+                  foregroundColor: this.hexToRgb('#991402'),
+                },
               },
             },
             {
-              userEnteredValue: { formulaValue: '' },
+              userEnteredValue: {
+                formulaValue: `=sumColoredCells(C12:C, H${2 + i})`,
+              },
               userEnteredFormat: {
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+                backgroundColor: this.hexToRgb('#b6d7a8'),
+                textFormat: {
+                  fontSize: 12,
+                  fontFamily: 'Verdana',
+                  foregroundColor: this.hexToRgb('#38761d'),
+                },
               },
             },
             {
-              userEnteredValue: { formulaValue: '' },
+              userEnteredValue: {
+                formulaValue: `=sumColoredCells(E12:E, H${2 + i})`,
+              },
               userEnteredFormat: {
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+                backgroundColor: this.hexToRgb('#b6d7a8'),
+                textFormat: {
+                  fontSize: 12,
+                  fontFamily: 'Verdana',
+                  foregroundColor: this.hexToRgb('#38761d'),
+                },
               },
             },
             {
-              userEnteredValue: { formulaValue: '' },
+              userEnteredValue: {
+                formulaValue: `=sumColoredCells(G12:G, H${2 + i})`,
+              },
               userEnteredFormat: {
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
+                backgroundColor: this.hexToRgb('#b6d7a8'),
+                textFormat: {
+                  fontSize: 12,
+                  fontFamily: 'Verdana',
+                  foregroundColor: this.hexToRgb('#38761d'),
+                },
               },
             },
             i < incomeCategories.length
@@ -302,7 +347,9 @@ export class SheetsService {
         ],
       };
 
-      return this.batchUpdateSheetData(requestBody);
+      const init = await this.batchUpdateSheetData(requestBody);
+      await this.deleteRange('E6:G10');
+      return init;
     }
   }
 
@@ -325,13 +372,17 @@ export class SheetsService {
     let color = '#ffffff';
     let isIncome = false;
 
-    if (
-      transactionData.category.startsWith('salary') ||
-      transactionData.category.startsWith('returns') ||
-      transactionData.category.startsWith('savings') ||
-      transactionData.category.startsWith('gifts')
-    ) {
+    if (transactionData.category.startsWith('salary')) {
       color = '#b6d7a8';
+      isIncome = true;
+    } else if (transactionData.category.startsWith('returns')) {
+      color = '#93c47d';
+      isIncome = true;
+    } else if (transactionData.category.startsWith('gifts')) {
+      color = '#6aa84f';
+      isIncome = true;
+    } else if (transactionData.category.startsWith('savings')) {
+      color = '#38761d';
       isIncome = true;
     } else if (transactionData.category.startsWith('food')) {
       color = '#8e7cc3';
@@ -516,5 +567,34 @@ export class SheetsService {
       spreadsheetId: this.spreadSheetId,
       requestBody: requestBody,
     });
+  }
+
+  private async deleteRange(range: string) {
+    const { lastSheet } = await this.getSheet();
+
+    const [startCell, endCell] = range.split(':');
+    const startColumn = startCell.charCodeAt(0) - 65;
+    const startRow = parseInt(startCell.substring(1)) - 1;
+    const endColumn = endCell.charCodeAt(0) - 65;
+    const endRow = parseInt(endCell.substring(1)) - 1;
+
+    const requestBody = {
+      requests: [
+        {
+          deleteRange: {
+            range: {
+              sheetId: lastSheet,
+              startRowIndex: startRow,
+              endRowIndex: endRow + 1,
+              startColumnIndex: startColumn,
+              endColumnIndex: endColumn + 1,
+            },
+            shiftDimension: 'COLUMNS',
+          },
+        },
+      ],
+    };
+
+    return this.batchUpdateSheetData(requestBody);
   }
 }
