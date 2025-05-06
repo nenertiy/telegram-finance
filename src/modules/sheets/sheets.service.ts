@@ -21,9 +21,6 @@ export class SheetsService {
   }
 
   async initFinance(usdAmount = 0, eurAmount = 0, rubAmount = 0) {
-    console.log('Init');
-    console.log(process.env.GOOGLE_PRIVATE_KEY);
-
     const { lastSheet, sheetName } = await this.getSheet();
     const sheetData = await this.getSheetData(sheetName);
     const date = dayjs().format('MMMM YYYY');
