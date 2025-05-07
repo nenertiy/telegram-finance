@@ -34,7 +34,7 @@ export class BotUpdate {
   }
 
   @Action(
-    /^(food|eating out|public transport|taxi|shopping|subscription|chill|travel|gifts|savings|salary|returns|swap|other)$/,
+    /^(food|eating out|public transport|taxi|shopping|subscription|chill|travel|gifts|savings|salary|returns|family|other)$/,
   )
   async onCategoryAction(@Ctx() ctx: Context<any>) {
     const category = ctx.callbackQuery.data;

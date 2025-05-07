@@ -25,6 +25,7 @@ export const categoryButtons = () => {
       Markup.button.callback('😎 Развлечения', 'chill'),
       Markup.button.callback('✈️ Путешествия', 'travel'),
       Markup.button.callback('🎁 Подарки', 'gifts'),
+      Markup.button.callback('🏠 Родители', 'family'),
       Markup.button.callback('🏦 Сбережения', 'savings'),
       Markup.button.callback('💵 Зарплата', 'salary'),
       Markup.button.callback('🪙 Возвраты', 'returns'),
