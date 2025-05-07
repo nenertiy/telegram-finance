@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { JWT } from 'google-auth-library';
 import { google } from 'googleapis';
+import * as dayjs from 'dayjs';
 import { SPEND_CATEGORIES } from 'src/common/constants/spend-categories';
 import { INCOME_CATEGORIES } from 'src/common/constants/income-categories';
 import { HEADER_CELLS } from 'src/common/constants/header-cells';
 import { INIT_ROW } from 'src/common/constants/init-row';
 import { cellFn } from './model/cell-fn';
-
-import * as dayjs from 'dayjs';
 
 @Injectable()
 export class SheetsService {
@@ -118,6 +117,8 @@ export class SheetsService {
     const currencySymbol =
       { usd: '($)', eur: '(€)', rub: '(₽)' }[currency] || '';
 
+    const finalDescription = description || category || 'Без категории';
+
     const values = [
       cellFn(dayjs().format('DD.MM.YYYY/HH:mm')),
       cellFn(`=B${prevRow}+C${thisRow}`),
@@ -132,7 +133,9 @@ export class SheetsService {
       cellFn(currency === 'rub' ? formattedAmount : 0, {
         backgroundColor: currency === 'rub' ? this.hexToRgb(color) : undefined,
       }),
-      cellFn(`${emoji} ${currencySymbol} ${description ?? category}`),
+      cellFn(`${emoji} ${currencySymbol} ${finalDescription}`, {
+        align: 'LEFT',
+      }),
     ];
 
     return this.batchUpdateSheetData({
