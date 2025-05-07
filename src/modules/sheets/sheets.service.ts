@@ -35,174 +35,71 @@ export class SheetsService {
       sheetData.data.values &&
       sheetData.data.values.length > 0;
     if (!valuesExist) {
-      const headerCells = HEADER_CELLS.map((cell) => {
-        cellFn(cell.value);
-      });
+      const headerCells = HEADER_CELLS.map((cell) =>
+        cellFn(cell.value, { fontSize: 14, align: 'CENTER' }),
+      );
 
       const categoryRows = [];
 
       for (let i = 0; i < SPEND_CATEGORIES.length; i++) {
         const category = SPEND_CATEGORIES[i];
+        const incomeCategory = INCOME_CATEGORIES[i];
+
         categoryRows.push({
           values: [
-            {
-              userEnteredValue: { stringValue: category.name },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb(category.color),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(C12:C, A${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#ea9999'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#991402'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(E12:E, A${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#ea9999'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#991402'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(G12:G, A${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#ea9999'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#991402'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(C12:C, H${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#b6d7a8'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#38761d'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(E12:E, H${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#b6d7a8'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#38761d'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(G12:G, H${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#b6d7a8'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#38761d'),
-                },
-              },
-            },
-            i < INCOME_CATEGORIES.length
-              ? {
-                  userEnteredValue: { stringValue: INCOME_CATEGORIES[i].name },
-                  userEnteredFormat: {
-                    backgroundColor: this.hexToRgb(INCOME_CATEGORIES[i].color),
-                    textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-                  },
-                }
-              : { userEnteredValue: { stringValue: '' } },
+            cellFn(category.name, {
+              backgroundColor: this.hexToRgb(category.color),
+            }),
+
+            cellFn(`=sumColoredCells(C12:C, A${2 + i})`, {
+              backgroundColor: this.hexToRgb('#ea9999'),
+              foregroundColor: this.hexToRgb('#991402'),
+            }),
+            cellFn(`=sumColoredCells(E12:E, A${2 + i})`, {
+              backgroundColor: this.hexToRgb('#ea9999'),
+              foregroundColor: this.hexToRgb('#991402'),
+            }),
+            cellFn(`=sumColoredCells(G12:G, A${2 + i})`, {
+              backgroundColor: this.hexToRgb('#ea9999'),
+              foregroundColor: this.hexToRgb('#991402'),
+            }),
+
+            cellFn(`=sumColoredCells(C12:C, H${2 + i})`, {
+              backgroundColor: this.hexToRgb('#b6d7a8'),
+              foregroundColor: this.hexToRgb('#38761d'),
+            }),
+            cellFn(`=sumColoredCells(E12:E, H${2 + i})`, {
+              backgroundColor: this.hexToRgb('#b6d7a8'),
+              foregroundColor: this.hexToRgb('#38761d'),
+            }),
+            cellFn(`=sumColoredCells(G12:G, H${2 + i})`, {
+              backgroundColor: this.hexToRgb('#b6d7a8'),
+              foregroundColor: this.hexToRgb('#38761d'),
+            }),
+
+            cellFn(incomeCategory?.name || '', {
+              backgroundColor: incomeCategory?.color
+                ? this.hexToRgb(incomeCategory.color)
+                : undefined,
+            }),
           ],
         });
       }
 
-      const initRow = INIT_ROW.map((cell) => {
-        cellFn(cell.value);
-      });
+      const initRow = INIT_ROW.map((cell) =>
+        cellFn(cell.value, { fontSize: 14, align: 'CENTER' }),
+      );
 
       const initialRow = {
         values: [
-          {
-            userEnteredValue: {
-              stringValue: dayjs().format('DD.MM.YYYY/HH:mm'),
-            },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: usdAmount },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-
-          {
-            userEnteredValue: { numberValue: 0 },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: eurAmount },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: 0 },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: rubAmount },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: 0 },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { stringValue: 'init' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
+          cellFn(dayjs().format('DD.MM.YYYY/HH:mm')),
+          cellFn(usdAmount),
+          cellFn(0),
+          cellFn(eurAmount),
+          cellFn(0),
+          cellFn(rubAmount),
+          cellFn(0),
+          cellFn('init'),
         ],
       };
 
@@ -235,7 +132,7 @@ export class SheetsService {
               rows: [
                 { values: headerCells },
                 ...categoryRows,
-                initRow,
+                { values: initRow },
                 initialRow,
               ],
             },
@@ -329,94 +226,30 @@ export class SheetsService {
       : `${emoji}${currencySymbol} ${transactionData.category}`;
 
     const values = [
-      {
-        userEnteredValue: {
-          stringValue: dayjs().format('DD.MM.YYYY/HH:mm'),
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredValue: {
-          formulaValue: `=B${prevRow}+C${thisRow}`,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredFormat:
-          transactionData.currency === 'usd'
-            ? {
-                backgroundColor: {
-                  red: this.hexToRgb(color).red,
-                  green: this.hexToRgb(color).green,
-                  blue: this.hexToRgb(color).blue,
-                },
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-              }
-            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
-        userEnteredValue: {
-          numberValue: transactionData.currency === 'usd' ? amount : 0,
-        },
-      },
-      {
-        userEnteredValue: {
-          formulaValue: `=D${prevRow}+E${thisRow}`,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredFormat:
-          transactionData.currency === 'eur'
-            ? {
-                backgroundColor: {
-                  red: this.hexToRgb(color).red,
-                  green: this.hexToRgb(color).green,
-                  blue: this.hexToRgb(color).blue,
-                },
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-              }
-            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
-        userEnteredValue: {
-          numberValue: transactionData.currency === 'eur' ? amount : 0,
-        },
-      },
-      {
-        userEnteredValue: {
-          formulaValue: `=F${prevRow}+G${thisRow}`,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredFormat:
-          transactionData.currency === 'rub'
-            ? {
-                backgroundColor: {
-                  red: this.hexToRgb(color).red,
-                  green: this.hexToRgb(color).green,
-                  blue: this.hexToRgb(color).blue,
-                },
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-              }
-            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
-        userEnteredValue: {
-          numberValue: transactionData.currency === 'rub' ? amount : 0,
-        },
-      },
-      {
-        userEnteredValue: {
-          stringValue: description,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
+      cellFn(dayjs().format('DD.MM.YYYY/HH:mm')),
+
+      cellFn(`=B${prevRow}+C${thisRow}`),
+
+      cellFn(transactionData.currency === 'usd' ? amount : 0, {
+        backgroundColor:
+          transactionData.currency === 'usd' ? this.hexToRgb(color) : undefined,
+      }),
+
+      cellFn(`=D${prevRow}+E${thisRow}`),
+
+      cellFn(transactionData.currency === 'eur' ? amount : 0, {
+        backgroundColor:
+          transactionData.currency === 'eur' ? this.hexToRgb(color) : undefined,
+      }),
+
+      cellFn(`=F${prevRow}+G${thisRow}`),
+
+      cellFn(transactionData.currency === 'rub' ? amount : 0, {
+        backgroundColor:
+          transactionData.currency === 'rub' ? this.hexToRgb(color) : undefined,
+      }),
+
+      cellFn(description),
     ];
 
     const requestBody = {
