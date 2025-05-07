@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { JWT } from 'google-auth-library';
 import { google } from 'googleapis';
+import { SPEND_CATEGORIES } from 'src/common/constants/spend-categories';
+import { INCOME_CATEGORIES } from 'src/common/constants/income-categories';
+import { HEADER_CELLS } from 'src/common/constants/header-cells';
+import { INIT_ROW } from 'src/common/constants/init-row';
+import { cellFn } from './model/cell-fn';
+
 import * as dayjs from 'dayjs';
 
 @Injectable()
@@ -29,88 +35,14 @@ export class SheetsService {
       sheetData.data.values &&
       sheetData.data.values.length > 0;
     if (!valuesExist) {
-      const spendCategories = [
-        { name: 'no category', color: '#cccccc' },
-        { name: 'food', color: '#8e7cc3' },
-        { name: 'eating out', color: '#b4a7d6' },
-        { name: 'public transport', color: '#d5a6bd' },
-        { name: 'taxi', color: '#c27ba0' },
-        { name: 'subscription', color: '#3d85c6' },
-        { name: 'shopping', color: '#ffe598' },
-        { name: 'chill', color: '#f9cb9c' },
-        { name: 'travel', color: '#f6b26b' },
-      ];
-
-      const incomeCategories = [
-        { name: 'salary', color: '#b6d7a8' },
-        { name: 'returns', color: '#93c47d' },
-        { name: 'gifts', color: '#6aa84f' },
-        { name: 'savings', color: '#38761d' },
-      ];
-
-      const headerCells = [
-        {
-          userEnteredValue: { stringValue: 'Spends' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-        {
-          userEnteredValue: { stringValue: '$' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-        {
-          userEnteredValue: { stringValue: '€' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-        {
-          userEnteredValue: { stringValue: '₽' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-        {
-          userEnteredValue: { stringValue: '$' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-        {
-          userEnteredValue: { stringValue: '€' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-        {
-          userEnteredValue: { stringValue: '₽' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-        {
-          userEnteredValue: { stringValue: 'Income' },
-          userEnteredFormat: {
-            textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-            horizontalAlignment: 'CENTER',
-          },
-        },
-      ];
+      const headerCells = HEADER_CELLS.map((cell) => {
+        cellFn(cell.value);
+      });
 
       const categoryRows = [];
 
-      for (let i = 0; i < spendCategories.length; i++) {
-        const category = spendCategories[i];
+      for (let i = 0; i < SPEND_CATEGORIES.length; i++) {
+        const category = SPEND_CATEGORIES[i];
         categoryRows.push({
           values: [
             {
@@ -201,11 +133,11 @@ export class SheetsService {
                 },
               },
             },
-            i < incomeCategories.length
+            i < INCOME_CATEGORIES.length
               ? {
-                  userEnteredValue: { stringValue: incomeCategories[i].name },
+                  userEnteredValue: { stringValue: INCOME_CATEGORIES[i].name },
                   userEnteredFormat: {
-                    backgroundColor: this.hexToRgb(incomeCategories[i].color),
+                    backgroundColor: this.hexToRgb(INCOME_CATEGORIES[i].color),
                     textFormat: { fontSize: 12, fontFamily: 'Verdana' },
                   },
                 }
@@ -214,66 +146,9 @@ export class SheetsService {
         });
       }
 
-      const initRow = {
-        values: [
-          {
-            userEnteredValue: { stringValue: 'Date' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-          {
-            userEnteredValue: { stringValue: '$' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-          {
-            userEnteredValue: { stringValue: '$' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-          {
-            userEnteredValue: { stringValue: '€' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-          {
-            userEnteredValue: { stringValue: '€' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-          {
-            userEnteredValue: { stringValue: '₽' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-          {
-            userEnteredValue: { stringValue: '₽' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-          {
-            userEnteredValue: { stringValue: 'Description' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 14, fontFamily: 'Verdana' },
-              horizontalAlignment: 'CENTER',
-            },
-          },
-        ],
-      };
+      const initRow = INIT_ROW.map((cell) => {
+        cellFn(cell.value);
+      });
 
       const initialRow = {
         values: [
@@ -462,7 +337,6 @@ export class SheetsService {
           textFormat: { fontSize: 12, fontFamily: 'Verdana' },
         },
       },
-      // Формула для суммирования USD
       {
         userEnteredValue: {
           formulaValue: `=B${prevRow}+C${thisRow}`,
