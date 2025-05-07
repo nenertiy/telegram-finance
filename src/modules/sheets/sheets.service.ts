@@ -80,7 +80,7 @@ export class SheetsService {
       ],
     });
 
-    await this.deleteRange('E6:G10');
+    await this.deleteRange('E7:G10');
   }
 
   async addTransaction({
@@ -288,9 +288,10 @@ export class SheetsService {
     const lower = category.toLowerCase();
     const mapping = [
       { prefix: 'salary', color: '#b6d7a8', income: true },
-      { prefix: 'returns', color: '#93c47d', income: true },
-      { prefix: 'gifts', color: '#6aa84f', income: true },
-      { prefix: 'savings', color: '#38761d', income: true },
+      { prefix: 'family', color: '#99C785', income: true },
+      { prefix: 'returns', color: '#7BB762', income: true },
+      { prefix: 'gifts', color: '#629E48', income: true },
+      { prefix: 'savings', color: '#4C7B38', income: true },
       { prefix: 'food', color: '#8e7cc3' },
       { prefix: 'eating out', color: '#b4a7d6' },
       { prefix: 'public transport', color: '#d5a6bd' },
