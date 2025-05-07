@@ -42,14 +42,14 @@ export class SheetsService {
 
     const initialRow = {
       values: [
-        cellFn(dayjs().format('DD.MM.YYYY/HH:mm')),
+        cellFn(dayjs().format('DD.MM.YYYY/HH:mm'), { align: 'LEFT' }),
         cellFn(usdAmount),
         cellFn(0),
         cellFn(eurAmount),
         cellFn(0),
         cellFn(rubAmount),
         cellFn(0),
-        cellFn('init'),
+        cellFn('init', { align: 'LEFT' }),
       ],
     };
 
@@ -120,7 +120,7 @@ export class SheetsService {
     const finalDescription = description || category || 'Без категории';
 
     const values = [
-      cellFn(dayjs().format('DD.MM.YYYY/HH:mm')),
+      cellFn(dayjs().format('DD.MM.YYYY/HH:mm'), { align: 'LEFT' }),
       cellFn(`=B${prevRow}+C${thisRow}`),
       cellFn(currency === 'usd' ? formattedAmount : 0, {
         backgroundColor: currency === 'usd' ? this.hexToRgb(color) : undefined,
@@ -260,6 +260,7 @@ export class SheetsService {
         values: [
           cellFn(category.name, {
             backgroundColor: this.hexToRgb(category.color),
+            align: 'LEFT',
           }),
           ...['C', 'E', 'G'].map((col) =>
             cellFn(`=sumColoredCells(${col}12:${col}, A${2 + i})`, {
