@@ -29,397 +29,113 @@ export class SheetsService {
   async initFinance(usdAmount = 0, eurAmount = 0, rubAmount = 0) {
     const { lastSheet, sheetName } = await this.getSheet();
     const sheetData = await this.getSheetData(sheetName);
-    const date = dayjs().format('MMMM YYYY');
-    const valuesExist =
-      sheetData.data &&
-      sheetData.data.values &&
-      sheetData.data.values.length > 0;
-    if (!valuesExist) {
-      const headerCells = HEADER_CELLS.map((cell) => {
-        cellFn(cell.value);
+    const currentDate = dayjs().format('MMMM YYYY');
+
+    if (this.hasValues(sheetData)) return;
+
+    const headerCells = HEADER_CELLS.map((cell) =>
+      cellFn(cell.value, { fontSize: 14, align: 'CENTER' }),
+    );
+    const categoryRows = this.generateCategoryRows();
+    const initRow = INIT_ROW.map((cell) =>
+      cellFn(cell.value, { fontSize: 14, align: 'CENTER' }),
+    );
+
+    const initialRow = {
+      values: [
+        cellFn(dayjs().format('DD.MM.YYYY/HH:mm')),
+        cellFn(usdAmount),
+        cellFn(0),
+        cellFn(eurAmount),
+        cellFn(0),
+        cellFn(rubAmount),
+        cellFn(0),
+        cellFn('init'),
+      ],
+    };
+
+    let sheetIdToUse = lastSheet;
+
+    if (sheetName !== currentDate) {
+      await this.batchUpdateSheetData({
+        requests: [{ addSheet: { properties: { title: currentDate } } }],
       });
-
-      const categoryRows = [];
-
-      for (let i = 0; i < SPEND_CATEGORIES.length; i++) {
-        const category = SPEND_CATEGORIES[i];
-        categoryRows.push({
-          values: [
-            {
-              userEnteredValue: { stringValue: category.name },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb(category.color),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(C12:C, A${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#ea9999'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#991402'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(E12:E, A${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#ea9999'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#991402'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(G12:G, A${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#ea9999'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#991402'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(C12:C, H${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#b6d7a8'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#38761d'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(E12:E, H${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#b6d7a8'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#38761d'),
-                },
-              },
-            },
-            {
-              userEnteredValue: {
-                formulaValue: `=sumColoredCells(G12:G, H${2 + i})`,
-              },
-              userEnteredFormat: {
-                backgroundColor: this.hexToRgb('#b6d7a8'),
-                textFormat: {
-                  fontSize: 12,
-                  fontFamily: 'Verdana',
-                  foregroundColor: this.hexToRgb('#38761d'),
-                },
-              },
-            },
-            i < INCOME_CATEGORIES.length
-              ? {
-                  userEnteredValue: { stringValue: INCOME_CATEGORIES[i].name },
-                  userEnteredFormat: {
-                    backgroundColor: this.hexToRgb(INCOME_CATEGORIES[i].color),
-                    textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-                  },
-                }
-              : { userEnteredValue: { stringValue: '' } },
-          ],
-        });
-      }
-
-      const initRow = INIT_ROW.map((cell) => {
-        cellFn(cell.value);
-      });
-
-      const initialRow = {
-        values: [
-          {
-            userEnteredValue: {
-              stringValue: dayjs().format('DD.MM.YYYY/HH:mm'),
-            },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: usdAmount },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-
-          {
-            userEnteredValue: { numberValue: 0 },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: eurAmount },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: 0 },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: rubAmount },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { numberValue: 0 },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-          {
-            userEnteredValue: { stringValue: 'init' },
-            userEnteredFormat: {
-              textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-            },
-          },
-        ],
-      };
-
-      let sheetIdToUse = lastSheet;
-
-      if (sheetName !== date) {
-        await this.batchUpdateSheetData({
-          requests: [
-            {
-              addSheet: {
-                properties: {
-                  title: date,
-                },
-              },
-            },
-          ],
-        });
-
-        const { lastSheet: newLastSheet } = await this.getSheet();
-
-        sheetIdToUse = newLastSheet;
-      }
-
-      const requestBody = {
-        requests: [
-          {
-            appendCells: {
-              fields: 'userEnteredValue, userEnteredFormat',
-              sheetId: sheetIdToUse,
-              rows: [
-                { values: headerCells },
-                ...categoryRows,
-                initRow,
-                initialRow,
-              ],
-            },
-          },
-        ],
-      };
-
-      const init = await this.batchUpdateSheetData(requestBody);
-      await this.deleteRange('E6:G10');
-      return init;
+      const { lastSheet: newLastSheet } = await this.getSheet();
+      sheetIdToUse = newLastSheet;
     }
+
+    await this.batchUpdateSheetData({
+      requests: [
+        {
+          appendCells: {
+            fields: 'userEnteredValue, userEnteredFormat',
+            sheetId: sheetIdToUse,
+            rows: [
+              { values: headerCells },
+              ...categoryRows,
+              { values: initRow },
+              initialRow,
+            ],
+          },
+        },
+      ],
+    });
+
+    await this.deleteRange('E6:G10');
   }
 
-  async addTransaction(transactionData: {
+  async addTransaction({
+    currency,
+    category,
+    amount,
+    description,
+  }: {
     currency: string;
     category: string;
     amount: number;
     description?: string;
   }) {
-    const { sheetName: oldSheeName } = await this.getSheet();
-    const oldSheetData = await this.getSheetData(oldSheeName);
-
-    const dollarValue =
-      oldSheetData.data.values[oldSheetData.data.values.length - 1][1];
-    const eurValue =
-      oldSheetData.data.values[oldSheetData.data.values.length - 1][3];
-    const rubValue =
-      oldSheetData.data.values[oldSheetData.data.values.length - 1][5];
+    const { sheetName: oldSheetName } = await this.getSheet();
+    const oldSheetData = await this.getSheetData(oldSheetName);
+    const lastRow = oldSheetData.data.values.at(-1) ?? [];
+    const [dollarValue, eurValue, rubValue] = [
+      lastRow[1],
+      lastRow[3],
+      lastRow[5],
+    ];
 
     await this.checkDateList(dollarValue, eurValue, rubValue);
+
     const { sheetName, lastSheet } = await this.getSheet();
     const sheetData = await this.getSheetData(sheetName);
 
-    const valuesExist =
-      sheetData.data &&
-      sheetData.data.values &&
-      sheetData.data.values.length > 0;
-    const prevRow = valuesExist ? sheetData.data.values.length : 1;
-    const thisRow = valuesExist ? sheetData.data.values.length + 1 : 2;
+    const prevRow = sheetData.data.values.length || 1;
+    const thisRow = prevRow + 1;
 
-    let color = '#ffffff';
-    let isIncome = false;
-
-    if (transactionData.category.startsWith('salary')) {
-      color = '#b6d7a8';
-      isIncome = true;
-    } else if (transactionData.category.startsWith('returns')) {
-      color = '#93c47d';
-      isIncome = true;
-    } else if (transactionData.category.startsWith('gifts')) {
-      color = '#6aa84f';
-      isIncome = true;
-    } else if (transactionData.category.startsWith('savings')) {
-      color = '#38761d';
-      isIncome = true;
-    } else if (transactionData.category.startsWith('food')) {
-      color = '#8e7cc3';
-    } else if (transactionData.category.startsWith('eating out')) {
-      color = '#b4a7d6';
-    } else if (transactionData.category.startsWith('public transport')) {
-      color = '#d5a6bd';
-    } else if (transactionData.category.startsWith('taxi')) {
-      color = '#c27ba0';
-    } else if (transactionData.category.startsWith('subscription')) {
-      color = '#3d85c6';
-    } else if (transactionData.category.startsWith('shopping')) {
-      color = '#ffe598';
-    } else if (transactionData.category.startsWith('chill')) {
-      color = '#f9cb9c';
-    } else if (transactionData.category.startsWith('travel')) {
-      color = '#f6b26b';
-    } else {
-      color = '#cccccc';
-    }
-
-    const amount = isIncome ? transactionData.amount : -transactionData.amount;
-
+    const { isIncome, color } = this.getCategoryStyle(category);
+    const formattedAmount = isIncome ? amount : -amount;
     const emoji = isIncome ? '💵' : '💸';
-
     const currencySymbol =
-      transactionData.currency === 'usd'
-        ? ' ($)'
-        : transactionData.currency === 'eur'
-          ? ' (€)'
-          : transactionData.currency === 'rub'
-            ? ' (₽)'
-            : '';
-
-    let description = transactionData.description
-      ? `${emoji}${currencySymbol} ${transactionData.description}`
-      : `${emoji}${currencySymbol} ${transactionData.category}`;
+      { usd: '($)', eur: '(€)', rub: '(₽)' }[currency] || '';
 
     const values = [
-      {
-        userEnteredValue: {
-          stringValue: dayjs().format('DD.MM.YYYY/HH:mm'),
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredValue: {
-          formulaValue: `=B${prevRow}+C${thisRow}`,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredFormat:
-          transactionData.currency === 'usd'
-            ? {
-                backgroundColor: {
-                  red: this.hexToRgb(color).red,
-                  green: this.hexToRgb(color).green,
-                  blue: this.hexToRgb(color).blue,
-                },
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-              }
-            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
-        userEnteredValue: {
-          numberValue: transactionData.currency === 'usd' ? amount : 0,
-        },
-      },
-      {
-        userEnteredValue: {
-          formulaValue: `=D${prevRow}+E${thisRow}`,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredFormat:
-          transactionData.currency === 'eur'
-            ? {
-                backgroundColor: {
-                  red: this.hexToRgb(color).red,
-                  green: this.hexToRgb(color).green,
-                  blue: this.hexToRgb(color).blue,
-                },
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-              }
-            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
-        userEnteredValue: {
-          numberValue: transactionData.currency === 'eur' ? amount : 0,
-        },
-      },
-      {
-        userEnteredValue: {
-          formulaValue: `=F${prevRow}+G${thisRow}`,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
-      {
-        userEnteredFormat:
-          transactionData.currency === 'rub'
-            ? {
-                backgroundColor: {
-                  red: this.hexToRgb(color).red,
-                  green: this.hexToRgb(color).green,
-                  blue: this.hexToRgb(color).blue,
-                },
-                textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-              }
-            : { textFormat: { fontSize: 12, fontFamily: 'Verdana' } },
-        userEnteredValue: {
-          numberValue: transactionData.currency === 'rub' ? amount : 0,
-        },
-      },
-      {
-        userEnteredValue: {
-          stringValue: description,
-        },
-        userEnteredFormat: {
-          textFormat: { fontSize: 12, fontFamily: 'Verdana' },
-        },
-      },
+      cellFn(dayjs().format('DD.MM.YYYY/HH:mm')),
+      cellFn(`=B${prevRow}+C${thisRow}`),
+      cellFn(currency === 'usd' ? formattedAmount : 0, {
+        backgroundColor: currency === 'usd' ? this.hexToRgb(color) : undefined,
+      }),
+      cellFn(`=D${prevRow}+E${thisRow}`),
+      cellFn(currency === 'eur' ? formattedAmount : 0, {
+        backgroundColor: currency === 'eur' ? this.hexToRgb(color) : undefined,
+      }),
+      cellFn(`=F${prevRow}+G${thisRow}`),
+      cellFn(currency === 'rub' ? formattedAmount : 0, {
+        backgroundColor: currency === 'rub' ? this.hexToRgb(color) : undefined,
+      }),
+      cellFn(`${emoji} ${currencySymbol} ${description ?? category}`),
     ];
 
-    const requestBody = {
+    return this.batchUpdateSheetData({
       requests: [
         {
           appendCells: {
@@ -429,9 +145,7 @@ export class SheetsService {
           },
         },
       ],
-    };
-
-    return this.batchUpdateSheetData(requestBody);
+    });
   }
 
   private hexToRgb(hex: string) {
@@ -504,38 +218,88 @@ export class SheetsService {
     return this.batchUpdateSheetData(requestBody);
   }
 
-  private async checkDateList(dollarValue, eurValue, rubValue) {
+  private async checkDateList(
+    dollarValue: number,
+    eurValue: number,
+    rubValue: number,
+  ) {
     const { sheetName } = await this.getSheet();
-    const date = dayjs().format('MMMM YYYY');
+    const currentDate = dayjs().format('MMMM YYYY');
 
-    if (sheetName !== date) {
-      try {
-        const requestBody = {
-          requests: [
-            {
-              addSheet: {
-                properties: {
-                  title: date,
-                },
-              },
-            },
-          ],
-        };
-
-        const response = await this.batchUpdateSheetData(requestBody);
-
-        console.log('Новый лист создан:', date);
-
-        await this.initFinance(dollarValue, eurValue, rubValue);
-
-        return response.data.replies[0].addSheet?.properties;
-      } catch (error) {
-        console.error('Ошибка при создании листа:', error.message);
-        throw error;
-      }
-    } else {
+    if (sheetName === currentDate) {
       console.log('Текущий лист уже актуален:', sheetName);
       return null;
     }
+
+    try {
+      const response = await this.batchUpdateSheetData({
+        requests: [{ addSheet: { properties: { title: currentDate } } }],
+      });
+
+      console.log('Новый лист создан:', currentDate);
+      await this.initFinance(dollarValue, eurValue, rubValue);
+
+      return response.data.replies[0].addSheet?.properties;
+    } catch (error) {
+      console.error('Ошибка при создании листа:', error.message);
+      throw error;
+    }
+  }
+
+  private hasValues(sheetData: any): boolean {
+    return !!sheetData.data?.values?.length;
+  }
+
+  private generateCategoryRows() {
+    return SPEND_CATEGORIES.map((category, i) => {
+      const incomeCategory = INCOME_CATEGORIES[i];
+      return {
+        values: [
+          cellFn(category.name, {
+            backgroundColor: this.hexToRgb(category.color),
+          }),
+          ...['C', 'E', 'G'].map((col) =>
+            cellFn(`=sumColoredCells(${col}12:${col}, A${2 + i})`, {
+              backgroundColor: this.hexToRgb('#ea9999'),
+              foregroundColor: this.hexToRgb('#991402'),
+            }),
+          ),
+          ...['C', 'E', 'G'].map((col) =>
+            cellFn(`=sumColoredCells(${col}12:${col}, H${2 + i})`, {
+              backgroundColor: this.hexToRgb('#b6d7a8'),
+              foregroundColor: this.hexToRgb('#38761d'),
+            }),
+          ),
+          cellFn(incomeCategory?.name || '', {
+            backgroundColor: incomeCategory?.color
+              ? this.hexToRgb(incomeCategory.color)
+              : undefined,
+          }),
+        ],
+      };
+    });
+  }
+
+  private getCategoryStyle(category: string) {
+    const lower = category.toLowerCase();
+    const mapping = [
+      { prefix: 'salary', color: '#b6d7a8', income: true },
+      { prefix: 'returns', color: '#93c47d', income: true },
+      { prefix: 'gifts', color: '#6aa84f', income: true },
+      { prefix: 'savings', color: '#38761d', income: true },
+      { prefix: 'food', color: '#8e7cc3' },
+      { prefix: 'eating out', color: '#b4a7d6' },
+      { prefix: 'public transport', color: '#d5a6bd' },
+      { prefix: 'taxi', color: '#c27ba0' },
+      { prefix: 'subscription', color: '#3d85c6' },
+      { prefix: 'shopping', color: '#ffe598' },
+      { prefix: 'chill', color: '#f9cb9c' },
+      { prefix: 'travel', color: '#f6b26b' },
+    ];
+
+    const match = mapping.find(({ prefix }) => lower.startsWith(prefix));
+    return match
+      ? { color: match.color, isIncome: match.income || false }
+      : { color: '#cccccc', isIncome: false };
   }
 }
