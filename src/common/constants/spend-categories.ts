@@ -1,5 +1,5 @@
 export const SPEND_CATEGORIES = [
-  { name: 'no category', color: '#cccccc' },
+  { name: 'no category (expenses)', color: '#cccccc' },
   { name: 'food', color: '#8e7cc3' },
   { name: 'eating out', color: '#b4a7d6' },
   { name: 'public transport', color: '#d5a6bd' },

@@ -80,7 +80,7 @@ export class SheetsService {
       ],
     });
 
-    await this.deleteRange('E7:G10');
+    await this.deleteRange('E9:G10');
   }
 
   async addTransaction({
@@ -287,6 +287,9 @@ export class SheetsService {
   private getCategoryStyle(category: string) {
     const lower = category.toLowerCase();
     const mapping = [
+      { prefix: 'other expenses', color: '#cccccc', income: false },
+      { prefix: 'other income', color: '#d3e7ca', income: true },
+      { prefix: 'sell', color: '#accb9e', income: true },
       { prefix: 'salary', color: '#b6d7a8', income: true },
       { prefix: 'family', color: '#99C785', income: true },
       { prefix: 'returns', color: '#7BB762', income: true },
