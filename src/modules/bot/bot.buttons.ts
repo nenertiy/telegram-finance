@@ -28,8 +28,10 @@ export const categoryButtons = () => {
       Markup.button.callback('🏠 Родители', 'family'),
       Markup.button.callback('🏦 Сбережения', 'savings'),
       Markup.button.callback('💵 Зарплата', 'salary'),
+      Markup.button.callback('💰 Продажа', 'sell'),
       Markup.button.callback('🪙 Возвраты', 'returns'),
-      Markup.button.callback('💿 Другое', 'other'),
+      Markup.button.callback('💿 Другое расходы', 'other expenses'),
+      Markup.button.callback('💸 Другое доходы', 'other income'),
     ],
     {
       columns: 2,
