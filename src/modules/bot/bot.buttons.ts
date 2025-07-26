@@ -16,8 +16,8 @@ export const moneyButtons = () => {
 export const categoryButtons = () => {
   return Markup.inlineKeyboard(
     [
-      Markup.button.callback('🛒 Еда', 'food'),
-      Markup.button.callback('🍔 Рестораны', 'eating out'),
+      Markup.button.callback('🛒 Продукты', 'food'),
+      Markup.button.callback('🍔 Кафе', 'eating out'),
       Markup.button.callback('🚎 Транспорт', 'public transport'),
       Markup.button.callback('🚕 Такси', 'taxi'),
       Markup.button.callback('🛍️ Покупки', 'shopping'),
