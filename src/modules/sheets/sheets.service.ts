@@ -36,6 +36,9 @@ export class SheetsService {
       cellFn(cell.value, { fontSize: 14, align: 'CENTER' }),
     );
     const categoryRows = this.generateCategoryRows();
+
+    const allRow = this.generateAllRow();
+
     const initRow = INIT_ROW.map((cell) =>
       cellFn(cell.value, { fontSize: 14, align: 'CENTER' }),
     );
@@ -72,6 +75,7 @@ export class SheetsService {
             rows: [
               { values: headerCells },
               ...categoryRows,
+              allRow,
               { values: initRow },
               initialRow,
             ],
@@ -263,13 +267,13 @@ export class SheetsService {
             align: 'LEFT',
           }),
           ...['C', 'E', 'G'].map((col) =>
-            cellFn(`=sumColoredCells(${col}12:${col}, A${2 + i})`, {
+            cellFn(`=sumColoredCells(${col}13:${col}, A${2 + i})`, {
               backgroundColor: this.hexToRgb('#ea9999'),
               foregroundColor: this.hexToRgb('#991402'),
             }),
           ),
           ...['C', 'E', 'G'].map((col) =>
-            cellFn(`=sumColoredCells(${col}12:${col}, H${2 + i})`, {
+            cellFn(`=sumColoredCells(${col}13:${col}, H${2 + i})`, {
               backgroundColor: this.hexToRgb('#b6d7a8'),
               foregroundColor: this.hexToRgb('#38761d'),
             }),
@@ -282,6 +286,45 @@ export class SheetsService {
         ],
       };
     });
+  }
+
+  private generateAllRow() {
+    return {
+      values: [
+        cellFn('all', {
+          align: 'LEFT',
+          backgroundColor: this.hexToRgb('#ea9999'),
+        }),
+        cellFn('=SUM(B2:B10)', {
+          backgroundColor: this.hexToRgb('#ea9999'),
+          foregroundColor: this.hexToRgb('#991402'),
+        }),
+        cellFn('=SUM(C2:C10)', {
+          backgroundColor: this.hexToRgb('#ea9999'),
+          foregroundColor: this.hexToRgb('#991402'),
+        }),
+        cellFn('=SUM(D2:D10)', {
+          backgroundColor: this.hexToRgb('#ea9999'),
+          foregroundColor: this.hexToRgb('#991402'),
+        }),
+        cellFn('=SUM(E2:E10)', {
+          backgroundColor: this.hexToRgb('#b6d7a8'),
+          foregroundColor: this.hexToRgb('#38761d'),
+        }),
+        cellFn('=SUM(F2:F10)', {
+          backgroundColor: this.hexToRgb('#b6d7a8'),
+          foregroundColor: this.hexToRgb('#38761d'),
+        }),
+        cellFn('=SUM(G2:G10)', {
+          backgroundColor: this.hexToRgb('#b6d7a8'),
+          foregroundColor: this.hexToRgb('#38761d'),
+        }),
+        cellFn('all', {
+          align: 'RIGHT',
+          backgroundColor: this.hexToRgb('#b6d7a8'),
+        }),
+      ],
+    };
   }
 
   private getCategoryStyle(category: string) {
