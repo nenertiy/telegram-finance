@@ -25,6 +25,7 @@
     "@nestjs/core": "^11.1.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.1.0",
+    "@nestjs/swagger": "^11.2.0",
     "dayjs": "^1.11.13",
     "google-auth-library": "^9.15.1",
     "googleapis": "^148.0.0",
