@@ -166,7 +166,7 @@ export class SheetsService {
       : { red: 1, green: 1, blue: 1 };
   }
 
-  private async getSheet() {
+  async getSheet() {
     const response = await this.sheets.spreadsheets.get({
       auth: this.auth,
       spreadsheetId: this.spreadSheetId,
@@ -180,7 +180,7 @@ export class SheetsService {
     return { lastSheet, sheetName };
   }
 
-  private async getSheetData(sheetName: string) {
+  async getSheetData(sheetName: string) {
     return this.sheets.spreadsheets.values.get({
       auth: this.auth,
       spreadsheetId: this.spreadSheetId,
