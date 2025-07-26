@@ -62,13 +62,7 @@ export class BotService {
   }
 
   async handleCurrencySelection(ctx: Context, currency: string) {
-    const userId = ctx.from.id;
-    const session = this.userSessions.get(userId);
-
-    if (!session) {
-      await ctx.reply('Сессия не найдена. Используйте /add для начала.');
-      return;
-    }
+    const { userId, session } = await this.checkSession(ctx);
 
     session.currency = currency;
     session.step = 'category';
@@ -81,13 +75,7 @@ export class BotService {
   }
 
   async handleCategorySelection(ctx: Context, category: string) {
-    const userId = ctx.from.id;
-    const session = this.userSessions.get(userId);
-
-    if (!session) {
-      await ctx.reply('Сессия не найдена. Используйте /add для начала.');
-      return;
-    }
+    const { userId, session } = await this.checkSession(ctx);
 
     session.category = category;
     session.step = 'amount';
@@ -99,13 +87,7 @@ export class BotService {
   }
 
   async handleTextMessage(ctx: Context<any>) {
-    const userId = ctx.from.id;
-    const session = this.userSessions.get(userId);
-
-    if (!session) {
-      await ctx.reply('Сессия не найдена. Используйте /add для начала.');
-      return;
-    }
+    const { userId, session } = await this.checkSession(ctx);
 
     const text = ctx.message.text;
 
@@ -172,5 +154,19 @@ export class BotService {
         'Произошла ошибка при сохранении транзакции. Попробуйте еще раз или используйте /clear для сброса.',
       );
     }
+  }
+
+  private async checkSession(
+    ctx: Context,
+  ): Promise<{ userId: number; session: any } | null> {
+    const userId = ctx.from.id;
+    const session = this.userSessions.get(userId);
+
+    if (!session) {
+      await ctx.reply('Сессия не найдена. Используйте /add для начала.');
+      return;
+    }
+
+    return { userId, session };
   }
 }
