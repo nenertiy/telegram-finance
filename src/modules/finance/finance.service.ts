@@ -14,7 +14,11 @@ export class FinanceService {
   async getFinanceData(): Promise<FinanceData> {
     const { sheetName } = await this.sheetsService.getSheet();
     const sheetData = await this.sheetsService.getSheetData(sheetName);
+    const sheetDataWithFormatting =
+      await this.sheetsService.getSheetDataWithFormatting(sheetName);
     const values = sheetData.data.values;
+    const formattedData =
+      sheetDataWithFormatting.data.sheets[0].data[0].rowData;
 
     if (!values || values.length < 12) {
       throw new Error('Недостаточно данных в таблице');
@@ -22,16 +26,17 @@ export class FinanceService {
 
     // Парсим итоговую строку "all" (строка 10)
     const allRow = values[10];
+    const lastRow = values[values.length - 1];
     const summary = {
-      totalUsdExpenses: Math.abs(parseFloat(allRow[1]) || 0),
-      totalEurExpenses: Math.abs(parseFloat(allRow[2]) || 0),
-      totalRubExpenses: Math.abs(parseFloat(allRow[3]) || 0),
-      totalUsdIncome: Math.abs(parseFloat(allRow[4]) || 0),
-      totalEurIncome: Math.abs(parseFloat(allRow[5]) || 0),
-      totalRubIncome: Math.abs(parseFloat(allRow[6]) || 0),
-      currentUsdBalance: 0,
-      currentEurBalance: 0,
-      currentRubBalance: 0,
+      totalUsdExpenses: parseFloat(allRow[1]) || 0,
+      totalEurExpenses: parseFloat(allRow[2]) || 0,
+      totalRubExpenses: parseFloat(allRow[3]) || 0,
+      totalUsdIncome: parseFloat(allRow[4]) || 0,
+      totalEurIncome: parseFloat(allRow[5]) || 0,
+      totalRubIncome: parseFloat(allRow[6]) || 0,
+      currentUsdBalance: parseFloat(lastRow[1]) || 0,
+      currentEurBalance: parseFloat(lastRow[3]) || 0,
+      currentRubBalance: parseFloat(lastRow[5]) || 0,
     };
 
     // Парсим категории (строки 1-9)
@@ -41,21 +46,25 @@ export class FinanceService {
       if (row) {
         // Добавляем категорию расходов, если name не пустое
         if (row[0] && row[0].trim() !== '') {
+          const { color } = this.sheetsService.getCategoryStyle(row[0]);
           categories.push({
             name: row[0],
-            usd: Math.abs(parseFloat(row[1]) || 0),
-            eur: Math.abs(parseFloat(row[2]) || 0),
-            rub: Math.abs(parseFloat(row[3]) || 0),
+            usd: parseFloat(row[1]) || 0,
+            eur: parseFloat(row[2]) || 0,
+            rub: parseFloat(row[3]) || 0,
+            color,
           });
         }
 
         // Добавляем категорию доходов, если name не пустое
         if (row[7] && row[7].trim() !== '') {
+          const { color } = this.sheetsService.getCategoryStyle(row[7]);
           categories.push({
             name: row[7],
-            usd: Math.abs(parseFloat(row[4]) || 0),
-            eur: Math.abs(parseFloat(row[5]) || 0),
-            rub: Math.abs(parseFloat(row[6]) || 0),
+            usd: parseFloat(row[4]) || 0,
+            eur: parseFloat(row[5]) || 0,
+            rub: parseFloat(row[6]) || 0,
+            color,
           });
         }
       }
@@ -65,24 +74,51 @@ export class FinanceService {
     const transactions: TransactionData[] = [];
     for (let i = 12; i < values.length; i++) {
       const row = values[i];
+      const formattedRow = formattedData[i]?.values;
+
       if (row && row[0] && row[0] !== 'Data') {
         const usdChange = parseFloat(row[2]) || 0;
         const eurChange = parseFloat(row[4]) || 0;
         const rubChange = parseFloat(row[6]) || 0;
         const description = row[7] || '';
 
-        // Определяем тип и категорию из описания
-        const isIncome = description.includes('💵');
-        const type = isIncome ? 'income' : 'expense';
-
-        // Извлекаем категорию из описания
         let category = '';
+
         if (description.includes('init')) {
           category = 'init';
         } else {
-          const parts = description.split(') ');
-          category = parts[1] || 'unknown';
+          let cellColor = null;
+
+          if (
+            usdChange !== 0 &&
+            formattedRow &&
+            formattedRow[2]?.effectiveFormat?.backgroundColor
+          ) {
+            cellColor = formattedRow[2].effectiveFormat.backgroundColor;
+          } else if (
+            eurChange !== 0 &&
+            formattedRow &&
+            formattedRow[4]?.effectiveFormat?.backgroundColor
+          ) {
+            cellColor = formattedRow[4].effectiveFormat.backgroundColor;
+          } else if (
+            rubChange !== 0 &&
+            formattedRow &&
+            formattedRow[6]?.effectiveFormat?.backgroundColor
+          ) {
+            cellColor = formattedRow[6].effectiveFormat.backgroundColor;
+          }
+
+          if (cellColor) {
+            category = this.sheetsService.getCategoryByColor(cellColor);
+          } else {
+            const parts = description.split(') ');
+            category = parts[1] || 'unknown';
+          }
         }
+
+        const isIncome = description.includes('💵');
+        const type = isIncome ? 'income' : 'expense';
 
         transactions.push({
           date: row[0],
@@ -95,6 +131,11 @@ export class FinanceService {
         });
       }
     }
+
+    transactions.sort(
+      (a, b) =>
+        this.parseDate(b.date).getTime() - this.parseDate(a.date).getTime(),
+    );
 
     return {
       summary,
@@ -117,6 +158,11 @@ export class FinanceService {
       );
     }
 
+    filteredTransactions.sort(
+      (a, b) =>
+        this.parseDate(b.date).getTime() - this.parseDate(a.date).getTime(),
+    );
+
     return filteredTransactions;
   }
 
@@ -124,6 +170,7 @@ export class FinanceService {
     currency?: 'usd' | 'eur' | 'rub',
   ): Promise<CurrencySummary> {
     const data = await this.getFinanceData();
+
     if (currency) {
       const capitalizedCurrency =
         currency.charAt(0).toUpperCase() + currency.slice(1).toLowerCase();
@@ -166,9 +213,18 @@ export class FinanceService {
       filteredCategories = filteredCategories.map((c) => ({
         name: c.name,
         [currency]: c[currency],
+        color: c.color,
       }));
     }
 
     return filteredCategories;
+  }
+
+  private parseDate(dateString: string): Date {
+    const [datePart, timePart] = dateString.split('/');
+    const [day, month, year] = datePart.split('.').map(Number);
+    const [hours, minutes] = timePart.split(':').map(Number);
+
+    return new Date(year, month - 1, day, hours, minutes);
   }
 }
