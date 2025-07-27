@@ -106,6 +106,11 @@ export class FinanceService {
       }
     }
 
+    transactions.sort(
+      (a, b) =>
+        this.parseDate(b.date).getTime() - this.parseDate(a.date).getTime(),
+    );
+
     return {
       summary,
       categories,
@@ -126,6 +131,12 @@ export class FinanceService {
         (t) => t[currency] !== undefined,
       );
     }
+
+    // Дополнительная сортировка после фильтрации (сначала последние)
+    filteredTransactions.sort(
+      (a, b) =>
+        this.parseDate(b.date).getTime() - this.parseDate(a.date).getTime(),
+    );
 
     return filteredTransactions;
   }
@@ -182,5 +193,13 @@ export class FinanceService {
     }
 
     return filteredCategories;
+  }
+
+  private parseDate(dateString: string): Date {
+    const [datePart, timePart] = dateString.split('/');
+    const [day, month, year] = datePart.split('.').map(Number);
+    const [hours, minutes] = timePart.split(':').map(Number);
+
+    return new Date(year, month - 1, day, hours, minutes);
   }
 }
