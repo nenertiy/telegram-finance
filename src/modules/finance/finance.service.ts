@@ -29,9 +29,15 @@ export class FinanceService {
       totalUsdIncome: Math.abs(parseFloat(allRow[4]) || 0),
       totalEurIncome: Math.abs(parseFloat(allRow[5]) || 0),
       totalRubIncome: Math.abs(parseFloat(allRow[6]) || 0),
-      currentUsdBalance: 0,
-      currentEurBalance: 0,
-      currentRubBalance: 0,
+      currentUsdBalance:
+        Math.abs(parseFloat(allRow[4]) || 0) -
+        Math.abs(parseFloat(allRow[1]) || 0),
+      currentEurBalance:
+        Math.abs(parseFloat(allRow[5]) || 0) -
+        Math.abs(parseFloat(allRow[2]) || 0),
+      currentRubBalance:
+        Math.abs(parseFloat(allRow[6]) || 0) -
+        Math.abs(parseFloat(allRow[3]) || 0),
     };
 
     // Парсим категории (строки 1-9)
@@ -128,6 +134,7 @@ export class FinanceService {
     currency?: 'usd' | 'eur' | 'rub',
   ): Promise<CurrencySummary> {
     const data = await this.getFinanceData();
+
     if (currency) {
       const capitalizedCurrency =
         currency.charAt(0).toUpperCase() + currency.slice(1).toLowerCase();
