@@ -28,15 +28,15 @@ export class FinanceService {
     const allRow = values[10];
     const lastRow = values[values.length - 1];
     const summary = {
-      totalUsdExpenses: Math.abs(parseFloat(allRow[1]) || 0),
-      totalEurExpenses: Math.abs(parseFloat(allRow[2]) || 0),
-      totalRubExpenses: Math.abs(parseFloat(allRow[3]) || 0),
-      totalUsdIncome: Math.abs(parseFloat(allRow[4]) || 0),
-      totalEurIncome: Math.abs(parseFloat(allRow[5]) || 0),
-      totalRubIncome: Math.abs(parseFloat(allRow[6]) || 0),
-      currentUsdBalance: Math.abs(parseFloat(lastRow[1]) || 0),
-      currentEurBalance: Math.abs(parseFloat(lastRow[3]) || 0),
-      currentRubBalance: Math.abs(parseFloat(lastRow[5]) || 0),
+      totalUsdExpenses: parseFloat(allRow[1]) || 0,
+      totalEurExpenses: parseFloat(allRow[2]) || 0,
+      totalRubExpenses: parseFloat(allRow[3]) || 0,
+      totalUsdIncome: parseFloat(allRow[4]) || 0,
+      totalEurIncome: parseFloat(allRow[5]) || 0,
+      totalRubIncome: parseFloat(allRow[6]) || 0,
+      currentUsdBalance: parseFloat(lastRow[1]) || 0,
+      currentEurBalance: parseFloat(lastRow[3]) || 0,
+      currentRubBalance: parseFloat(lastRow[5]) || 0,
     };
 
     // Парсим категории (строки 1-9)
@@ -49,9 +49,9 @@ export class FinanceService {
           const { color } = this.sheetsService.getCategoryStyle(row[0]);
           categories.push({
             name: row[0],
-            usd: Math.abs(parseFloat(row[1]) || 0),
-            eur: Math.abs(parseFloat(row[2]) || 0),
-            rub: Math.abs(parseFloat(row[3]) || 0),
+            usd: parseFloat(row[1]) || 0,
+            eur: parseFloat(row[2]) || 0,
+            rub: parseFloat(row[3]) || 0,
             color,
           });
         }
@@ -61,9 +61,9 @@ export class FinanceService {
           const { color } = this.sheetsService.getCategoryStyle(row[7]);
           categories.push({
             name: row[7],
-            usd: Math.abs(parseFloat(row[4]) || 0),
-            eur: Math.abs(parseFloat(row[5]) || 0),
-            rub: Math.abs(parseFloat(row[6]) || 0),
+            usd: parseFloat(row[4]) || 0,
+            eur: parseFloat(row[5]) || 0,
+            rub: parseFloat(row[6]) || 0,
             color,
           });
         }
