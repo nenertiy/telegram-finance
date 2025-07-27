@@ -327,7 +327,7 @@ export class SheetsService {
     };
   }
 
-  private getCategoryStyle(category: string) {
+  public getCategoryStyle(category: string) {
     const lower = category.toLowerCase();
     const mapping = [
       { prefix: 'other expenses', color: '#cccccc', income: false },

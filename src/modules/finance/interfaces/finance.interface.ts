@@ -12,6 +12,7 @@ export interface CategorySummary {
   usd?: number;
   eur?: number;
   rub?: number;
+  color?: string;
 }
 
 export interface FinanceData {

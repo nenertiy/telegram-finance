@@ -41,21 +41,25 @@ export class FinanceService {
       if (row) {
         // Добавляем категорию расходов, если name не пустое
         if (row[0] && row[0].trim() !== '') {
+          const { color } = this.sheetsService.getCategoryStyle(row[0]);
           categories.push({
             name: row[0],
             usd: Math.abs(parseFloat(row[1]) || 0),
             eur: Math.abs(parseFloat(row[2]) || 0),
             rub: Math.abs(parseFloat(row[3]) || 0),
+            color,
           });
         }
 
         // Добавляем категорию доходов, если name не пустое
         if (row[7] && row[7].trim() !== '') {
+          const { color } = this.sheetsService.getCategoryStyle(row[7]);
           categories.push({
             name: row[7],
             usd: Math.abs(parseFloat(row[4]) || 0),
             eur: Math.abs(parseFloat(row[5]) || 0),
             rub: Math.abs(parseFloat(row[6]) || 0),
+            color,
           });
         }
       }
@@ -166,6 +170,7 @@ export class FinanceService {
       filteredCategories = filteredCategories.map((c) => ({
         name: c.name,
         [currency]: c[currency],
+        color: c.color,
       }));
     }
 
