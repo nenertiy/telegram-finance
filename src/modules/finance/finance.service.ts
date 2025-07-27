@@ -26,6 +26,7 @@ export class FinanceService {
 
     // Парсим итоговую строку "all" (строка 10)
     const allRow = values[10];
+    const lastRow = values[values.length - 1];
     const summary = {
       totalUsdExpenses: Math.abs(parseFloat(allRow[1]) || 0),
       totalEurExpenses: Math.abs(parseFloat(allRow[2]) || 0),
@@ -33,15 +34,9 @@ export class FinanceService {
       totalUsdIncome: Math.abs(parseFloat(allRow[4]) || 0),
       totalEurIncome: Math.abs(parseFloat(allRow[5]) || 0),
       totalRubIncome: Math.abs(parseFloat(allRow[6]) || 0),
-      currentUsdBalance:
-        Math.abs(parseFloat(allRow[4]) || 0) -
-        Math.abs(parseFloat(allRow[1]) || 0),
-      currentEurBalance:
-        Math.abs(parseFloat(allRow[5]) || 0) -
-        Math.abs(parseFloat(allRow[2]) || 0),
-      currentRubBalance:
-        Math.abs(parseFloat(allRow[6]) || 0) -
-        Math.abs(parseFloat(allRow[3]) || 0),
+      currentUsdBalance: Math.abs(parseFloat(lastRow[1]) || 0),
+      currentEurBalance: Math.abs(parseFloat(lastRow[3]) || 0),
+      currentRubBalance: Math.abs(parseFloat(lastRow[5]) || 0),
     };
 
     // Парсим категории (строки 1-9)
