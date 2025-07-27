@@ -188,11 +188,36 @@ export class SheetsService {
     });
   }
 
+  getCategoryByColor(rgbColor: any): string {
+    if (!rgbColor) return 'unknown';
+
+    const r = Math.round((rgbColor.red || 0) * 255);
+    const g = Math.round((rgbColor.green || 0) * 255);
+    const b = Math.round((rgbColor.blue || 0) * 255);
+    const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+    const allCategories = [...SPEND_CATEGORIES, ...INCOME_CATEGORIES];
+
+    const category = allCategories.find(
+      (cat) => cat.color.toLowerCase() === hex.toLowerCase(),
+    );
+    return category ? category.name : 'unknown';
+  }
+
   private async batchUpdateSheetData(requestBody: object) {
     return this.sheets.spreadsheets.batchUpdate({
       auth: this.auth,
       spreadsheetId: this.spreadSheetId,
       requestBody: requestBody,
+    });
+  }
+
+  async getSheetDataWithFormatting(sheetName: string) {
+    return this.sheets.spreadsheets.get({
+      auth: this.auth,
+      spreadsheetId: this.spreadSheetId,
+      ranges: [sheetName + '!A:Z'],
+      includeGridData: true,
     });
   }
 

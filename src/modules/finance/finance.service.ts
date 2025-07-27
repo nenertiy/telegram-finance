@@ -14,7 +14,11 @@ export class FinanceService {
   async getFinanceData(): Promise<FinanceData> {
     const { sheetName } = await this.sheetsService.getSheet();
     const sheetData = await this.sheetsService.getSheetData(sheetName);
+    const sheetDataWithFormatting =
+      await this.sheetsService.getSheetDataWithFormatting(sheetName);
     const values = sheetData.data.values;
+    const formattedData =
+      sheetDataWithFormatting.data.sheets[0].data[0].rowData;
 
     if (!values || values.length < 12) {
       throw new Error('Недостаточно данных в таблице');
@@ -75,24 +79,51 @@ export class FinanceService {
     const transactions: TransactionData[] = [];
     for (let i = 12; i < values.length; i++) {
       const row = values[i];
+      const formattedRow = formattedData[i]?.values;
+
       if (row && row[0] && row[0] !== 'Data') {
         const usdChange = parseFloat(row[2]) || 0;
         const eurChange = parseFloat(row[4]) || 0;
         const rubChange = parseFloat(row[6]) || 0;
         const description = row[7] || '';
 
-        // Определяем тип и категорию из описания
-        const isIncome = description.includes('💵');
-        const type = isIncome ? 'income' : 'expense';
-
-        // Извлекаем категорию из описания
         let category = '';
+
         if (description.includes('init')) {
           category = 'init';
         } else {
-          const parts = description.split(') ');
-          category = parts[1] || 'unknown';
+          let cellColor = null;
+
+          if (
+            usdChange !== 0 &&
+            formattedRow &&
+            formattedRow[2]?.effectiveFormat?.backgroundColor
+          ) {
+            cellColor = formattedRow[2].effectiveFormat.backgroundColor;
+          } else if (
+            eurChange !== 0 &&
+            formattedRow &&
+            formattedRow[4]?.effectiveFormat?.backgroundColor
+          ) {
+            cellColor = formattedRow[4].effectiveFormat.backgroundColor;
+          } else if (
+            rubChange !== 0 &&
+            formattedRow &&
+            formattedRow[6]?.effectiveFormat?.backgroundColor
+          ) {
+            cellColor = formattedRow[6].effectiveFormat.backgroundColor;
+          }
+
+          if (cellColor) {
+            category = this.sheetsService.getCategoryByColor(cellColor);
+          } else {
+            const parts = description.split(') ');
+            category = parts[1] || 'unknown';
+          }
         }
+
+        const isIncome = description.includes('💵');
+        const type = isIncome ? 'income' : 'expense';
 
         transactions.push({
           date: row[0],
@@ -132,7 +163,6 @@ export class FinanceService {
       );
     }
 
-    // Дополнительная сортировка после фильтрации (сначала последние)
     filteredTransactions.sort(
       (a, b) =>
         this.parseDate(b.date).getTime() - this.parseDate(a.date).getTime(),
