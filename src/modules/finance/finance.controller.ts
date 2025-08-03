@@ -8,8 +8,8 @@ export class FinanceController {
 
   @Get('overview')
   @ApiOperation({ summary: 'Get finance overview' })
-  async getFinanceOverview() {
-    return this.financeService.getFinanceData();
+  async getFinanceOverview(@Query('sheetName') sheetName: string) {
+    return this.financeService.getFinanceData(sheetName);
   }
 
   @Get('balances')
@@ -20,8 +20,16 @@ export class FinanceController {
     required: false,
     enum: ['usd', 'eur', 'rub'],
   })
-  async getBalances(@Query('currency') currency: 'usd' | 'eur' | 'rub') {
-    return this.financeService.getSummaryByCurrency(currency);
+  @ApiQuery({
+    name: 'sheetName',
+    type: String,
+    required: true,
+  })
+  async getBalances(
+    @Query('sheetName') sheetName: string,
+    @Query('currency') currency?: 'usd' | 'eur' | 'rub',
+  ) {
+    return this.financeService.getSummaryByCurrency(sheetName, currency);
   }
 
   @Get('transactions')
@@ -32,10 +40,23 @@ export class FinanceController {
     required: false,
     enum: ['usd', 'eur', 'rub'],
   })
+  @ApiQuery({
+    name: 'sheetName',
+    type: String,
+    required: true,
+  })
   async getTransactionHistory(
-    @Query('currency') currency: 'usd' | 'eur' | 'rub',
+    @Query('sheetName') sheetName: string,
+    @Query('currency') currency?: 'usd' | 'eur' | 'rub',
+    @Query('skip') skip: number = 0,
+    @Query('take') take: number = 50,
   ) {
-    return this.financeService.getTransactionHistory(currency);
+    return this.financeService.getTransactionHistory(
+      sheetName,
+      currency,
+      skip,
+      take,
+    );
   }
 
   @Get('categories')
@@ -46,7 +67,15 @@ export class FinanceController {
     required: false,
     enum: ['usd', 'eur', 'rub'],
   })
-  async getCategorySummary(@Query('currency') currency: 'usd' | 'eur' | 'rub') {
-    return this.financeService.getCategorySummary(currency);
+  @ApiQuery({
+    name: 'sheetName',
+    type: String,
+    required: true,
+  })
+  async getCategorySummary(
+    @Query('sheetName') sheetName: string,
+    @Query('currency') currency?: 'usd' | 'eur' | 'rub',
+  ) {
+    return this.financeService.getCategorySummary(sheetName, currency);
   }
 }
