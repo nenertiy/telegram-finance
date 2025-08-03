@@ -5,14 +5,14 @@ import {
   CategorySummary,
   FinanceData,
   CurrencySummary,
+  TransactionHistoryResponse,
 } from './interfaces/finance.interface';
 
 @Injectable()
 export class FinanceService {
   constructor(private readonly sheetsService: SheetsService) {}
 
-  async getFinanceData(): Promise<FinanceData> {
-    const { sheetName } = await this.sheetsService.getSheet();
+  async getFinanceData(sheetName: string): Promise<FinanceData> {
     const sheetData = await this.sheetsService.getSheetData(sheetName);
     const sheetDataWithFormatting =
       await this.sheetsService.getSheetDataWithFormatting(sheetName);
@@ -145,9 +145,12 @@ export class FinanceService {
   }
 
   async getTransactionHistory(
+    sheetName: string,
     currency?: 'usd' | 'eur' | 'rub',
-  ): Promise<TransactionData[]> {
-    const data = await this.getFinanceData();
+    skip?: number,
+    take?: number,
+  ): Promise<TransactionHistoryResponse> {
+    const data = await this.getFinanceData(sheetName);
     let filteredTransactions = data.transactions.filter(
       (t) => t.category !== 'init',
     );
@@ -163,13 +166,29 @@ export class FinanceService {
         this.parseDate(b.date).getTime() - this.parseDate(a.date).getTime(),
     );
 
-    return filteredTransactions;
+    const totalSize = filteredTransactions.length;
+
+    const skipValue = Number(skip) || 0;
+    const takeValue = Number(take) || 10;
+
+    const paginatedTransactions = filteredTransactions.slice(
+      skipValue,
+      skipValue + takeValue,
+    );
+
+    return {
+      transactions: paginatedTransactions,
+      totalSize,
+      skip: skipValue,
+      take: takeValue,
+    };
   }
 
   async getSummaryByCurrency(
+    sheetName: string,
     currency?: 'usd' | 'eur' | 'rub',
   ): Promise<CurrencySummary> {
-    const data = await this.getFinanceData();
+    const data = await this.getFinanceData(sheetName);
 
     if (currency) {
       const capitalizedCurrency =
@@ -203,9 +222,10 @@ export class FinanceService {
   }
 
   async getCategorySummary(
+    sheetName: string,
     currency?: 'usd' | 'eur' | 'rub',
   ): Promise<CategorySummary[]> {
-    const data = await this.getFinanceData();
+    const data = await this.getFinanceData(sheetName);
 
     let filteredCategories = data.categories.filter((c) => c.name !== 'all');
 

@@ -7,6 +7,14 @@ export interface TransactionData {
   type: 'income' | 'expense';
   category: string;
 }
+
+export interface TransactionHistoryResponse {
+  transactions: TransactionData[];
+  totalSize: number;
+  skip: number;
+  take: number;
+}
+
 export interface CategorySummary {
   name: string;
   usd?: number;
