@@ -240,6 +240,11 @@ export class FinanceService {
     return filteredCategories;
   }
 
+  async getSheetNames(): Promise<string[]> {
+    const { sheets } = await this.sheetsService.getSheet();
+    return sheets.map((sheet) => sheet.properties.title);
+  }
+
   private parseDate(dateString: string): Date {
     const [datePart, timePart] = dateString.split('/');
     const [day, month, year] = datePart.split('.').map(Number);

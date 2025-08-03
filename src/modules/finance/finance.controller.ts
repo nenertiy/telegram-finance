@@ -78,4 +78,10 @@ export class FinanceController {
   ) {
     return this.financeService.getCategorySummary(sheetName, currency);
   }
+
+  @Get('sheet-names')
+  @ApiOperation({ summary: 'Get sheet names' })
+  async getSheetNames() {
+    return this.financeService.getSheetNames();
+  }
 }

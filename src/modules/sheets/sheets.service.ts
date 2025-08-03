@@ -176,8 +176,9 @@ export class SheetsService {
       response.data.sheets[response.data.sheets.length - 1].properties.sheetId;
     const sheetName =
       response.data.sheets[response.data.sheets.length - 1].properties.title;
+    const sheets = response.data.sheets;
 
-    return { lastSheet, sheetName };
+    return { lastSheet, sheetName, sheets };
   }
 
   async getSheetData(sheetName: string) {
